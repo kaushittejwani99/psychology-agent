@@ -49,8 +49,6 @@ function initiateCall(timeOfDay) {
 // ==========================================
 // 1. CRON JOBS (The Schedulers)
 // ==========================================
-
-// Subah 9:00 AM ka Alarm
 cron.schedule('0 9 * * *', () => {
     console.log('9:00 AM IST - Initiating morning work protocol.');
     isAwake = false; 
@@ -58,7 +56,6 @@ cron.schedule('0 9 * * *', () => {
     initiateCall('morning');
 }, { timezone: "Asia/Kolkata" });
 
-// Raat 10:30 PM ka Audit
 cron.schedule('30 22 * * *', () => {
     console.log('10:30 PM IST - Initiating night audit protocol.');
     isAwake = false; 
@@ -67,7 +64,26 @@ cron.schedule('30 22 * * *', () => {
 }, { timezone: "Asia/Kolkata" });
 
 // ==========================================
-// 2. WEBHOOKS FOR MORNING (9:00 AM)
+// 2. EXTERNAL TRIGGERS (For Browser & GitHub Actions)
+// ==========================================
+app.get('/trigger-morning', (req, res) => {
+    console.log('Morning trigger hit manually!');
+    isAwake = false; 
+    if (retryTimeout) clearTimeout(retryTimeout);
+    initiateCall('morning');
+    res.send('Morning call fired!');
+});
+
+app.get('/trigger-night', (req, res) => {
+    console.log('Night trigger hit manually!');
+    isAwake = false; 
+    if (retryTimeout) clearTimeout(retryTimeout);
+    initiateCall('night');
+    res.send('Night call fired!');
+});
+
+// ==========================================
+// 3. WEBHOOKS FOR MORNING (9:00 AM)
 // ==========================================
 app.post('/twiml-gather-morning', (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
@@ -96,7 +112,7 @@ app.post('/process-speech-morning', (req, res) => {
 });
 
 // ==========================================
-// 3. WEBHOOKS FOR NIGHT (10:30 PM)
+// 4. WEBHOOKS FOR NIGHT (10:30 PM)
 // ==========================================
 app.post('/twiml-gather-night', (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
@@ -125,10 +141,10 @@ app.post('/process-speech-night', (req, res) => {
 });
 
 // ==========================================
-// 4. PING ROUTE (To keep server awake)
+// 5. PING ROUTE (To keep server awake)
 // ==========================================
 app.get('/', (req, res) => {
-    res.send('Eagle Mindset Agent is active. Only 9 AM and 10:30 PM calls are scheduled.');
+    res.send('Eagle Mindset Agent is active. 9 AM and 10:30 PM schedules are locked and loaded.');
 });
 
 // Start the server

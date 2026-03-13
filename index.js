@@ -49,19 +49,19 @@ function initiateCall(timeOfDay) {
 // ==========================================
 // 1. CRON JOBS (The Schedulers)
 // ==========================================
-cron.schedule('0 9 * * *', () => {
-    console.log('9:00 AM IST - Initiating morning work protocol.');
-    isAwake = false; 
-    if (retryTimeout) clearTimeout(retryTimeout);
-    initiateCall('morning');
-}, { timezone: "Asia/Kolkata" });
+// cron.schedule('0 9 * * *', () => {
+//     console.log('9:00 AM IST - Initiating morning work protocol.');
+//     isAwake = false; 
+//     if (retryTimeout) clearTimeout(retryTimeout);
+//     initiateCall('morning');
+// }, { timezone: "Asia/Kolkata" });
 
-cron.schedule('30 22 * * *', () => {
-    console.log('10:30 PM IST - Initiating night audit protocol.');
-    isAwake = false; 
-    if (retryTimeout) clearTimeout(retryTimeout);
-    initiateCall('night');
-}, { timezone: "Asia/Kolkata" });
+// cron.schedule('30 22 * * *', () => {
+//     console.log('10:30 PM IST - Initiating night audit protocol.');
+//     isAwake = false; 
+//     if (retryTimeout) clearTimeout(retryTimeout);
+//     initiateCall('night');
+// }, { timezone: "Asia/Kolkata" });
 
 // ==========================================
 // 2. EXTERNAL TRIGGERS (For Browser & GitHub Actions)
